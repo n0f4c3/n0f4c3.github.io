@@ -1,0 +1,83 @@
+﻿Dragon Radio changelog
+
+Dragon Radio 1.1.3
+Amélioration du système de mise à jour
+Amélioration du système de sauvegarde(Settings.ini)
+Amélioration du système pour les lien radio
+Correction du nom de 96 virgin radio FM Montréal en 95 virgin radio FM Montréal
+
+Dragon Radio 1.1.2
+[Important!]Correction d'un problèmes critique
+ajout de la radio Radio-classique Montréal
+
+Dragon Radio 1.1.1
+ajout de la radio ICI Radio-Canada Première Montréal
+ajout de la radio ICI Radio-Canada Musique Montréal
+
+Dragon Radio 1.1.0
+Correction d'un bug qui faisait planter l'application
+
+Dragon Radio 1.0.9
+mise à jour de plusieurs liens radio
+mise à jour mineurs de l'interface utilisateur
+nouveau système pour les lien radio
+ajout de la radio QUB Radio
+Correction de bugs mineurs
+
+Dragon Radio 1.0.8
+Changement de l'icône de l'option mute
+Correction d'un bug avec l'option mute
+
+Dragon Radio 1.0.7
+mise à jour du lien CHOM 97.7 Montréal
+ajout d'un option mute
+mise à jour du lien Rythme FM 105.7 Montréal
+Changement du nom de CJSO 101.7 FM en CJSO 101.7 FM Sorel-Tracy
+
+Dragon Radio 1.0.6
+ajout de la radio CJSO 101.7 FM Sorel-Tracy
+Correction de bugs mineurs
+
+Dragon Radio 1.0.5
+mise à jour du lien M103.5FM Lanaudière
+Correction de bugs mineurs
+
+Dragon Radio 1.0.4
+[Important!]Correction d'un problèmes de sécurité avec le système de mise à jour
+mise à jour du lien CHOM 97.7 Montréal
+ajout de la possibilité de faire un double clic sur l'icône de l'application dans la zone de notification pour la faire réapparaître
+
+Dragon Radio 1.0.3
+mise à jour du lien M103.5FM Lanaudière
+Correction de bugs mineurs
+
+Dragon Radio 1.0.2
+Correction d'un bug qui faisait qu'un message d'erreur s'afficher plein de fois
+ 
+Dragon Radio 1.0.1
+Amélioration du système de mise à jour
+Correction de bugs mineurs
+
+Dragon Radio 1.0.0
+Correction de bugs mineurs
+ 
+Dragon Radio Beta 1c
+ajout d'une notification lorsque une nouvelle version est disponible
+ajout de la sauvegarde de la dernière radio jouer
+Correction de bugs mineurs
+
+Dragon Radio Beta 1a
+Correction d'un problème avec le système de mise à jour
+
+Dragon Radio Beta 1
+ajout d'un système de mise à jour
+
+Dragon Radio Alpha 5b
+ajout d'une section à propos
+ajout de la radio M103.5FM Lanaudière
+
+Dragon Radio Alpha 5a
+mise à jour du lien 96 virgin radio FM Montréal
+
+Dragon Radio Alpha 5
+Première release sur internet
