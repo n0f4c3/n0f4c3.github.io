@@ -1,5 +1,8 @@
 ﻿Dragon Radio changelog
 
+Dragon Radio 1.1.4
+Correction d'un bug avec l'option mute
+
 Dragon Radio 1.1.3
 Amélioration du système de mise à jour
 Amélioration du système de sauvegarde(Settings.ini)
