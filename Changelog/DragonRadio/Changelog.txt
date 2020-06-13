@@ -1,6 +1,6 @@
 ﻿Dragon Radio changelog
 
-Dragon Radio 1.1.5
+Dragon Radio 1.1.6
 Correction de bugs mineurs
 Amélioration du système de mise à jour
 
