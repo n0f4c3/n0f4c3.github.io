@@ -1,5 +1,8 @@
 ﻿Dragon Radio changelog
 
+Dragon Radio 1.1.7
+ajout de la radio Radio Acton 103.7 St-Hyacinthe
+
 Dragon Radio 1.1.6
 Correction de bugs mineurs
 Amélioration du système de mise à jour
