@@ -5,6 +5,14 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="style.css">
+	<script>
+		function scrollToBottom() {
+			window.scrollTo({
+				top: document.documentElement.scrollHeight,
+				behavior: 'smooth'
+			});
+		}
+	</script>
 </head>
 <body>
 	<header>
@@ -34,15 +42,13 @@
   </nav>
 </header>
 
-
-
 	<main>
 		<article>
 			<h2>Avoir les anciens jeux de XP/win7</h2>
 			<p>Bonjour aujourd'hui je vous propose de réinstaller.</p>
 			<p>Les anciens jeux de Windows XP/win7 sur votre pc Windows 7/8/10/11</p>
 			<p>Étape 1 Télécharger La version des jeux que vous souhaitez :</p> 
-			<a href="#bottom" download class="download-button">Lien de téléchargement par ici</a>
+			<button onclick="scrollToBottom()" download class="download-button">Lien de téléchargement par ici</button>
 			<p>Étape 2 décompresser le fichier zip</p>
 			<p>Étape 3 Lancer un des jeux et amusez-vous.</p>
 			<p>Demineur (XP)</p>
