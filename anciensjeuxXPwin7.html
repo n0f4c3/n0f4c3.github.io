@@ -1,184 +1,629 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-	<title>n0f4c3 : Les anciens jeux de XP/win7</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="style.css">
+  <title>n0f4c3 : Les anciens jeux de XP/win7</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* ── Variables ── */
+    :root {
+      --bg:        #080b0f;
+      --bg2:       #0d1117;
+      --surface:   #111720;
+      --surface2:  #141c27;
+      --border:    #1e2d42;
+      --accent:    #00e5ff;
+      --accent2:   #00ff99;
+      --text:      #c9d8ea;
+      --muted:     #4a6278;
+      --danger:    #ff3c5f;
+      --font-mono: 'Courier New', Courier, monospace;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ── Scanlines overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,229,255,0.015) 2px,
+        rgba(0,229,255,0.015) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── Background grid ── */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    /* ── Header ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8, 11, 15, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      height: 64px;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      text-shadow: 0 0 18px rgba(0,229,255,0.55);
+      cursor: default;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    header h1::before,
+    header h1::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      overflow: hidden;
+      clip: rect(0, 900px, 0, 0);
+    }
+    header h1::before {
+      color: var(--danger);
+      animation: glitch-top 3.5s infinite steps(1);
+      text-shadow: none;
+    }
+    header h1::after {
+      color: var(--accent2);
+      animation: glitch-bot 3.5s infinite steps(1);
+      text-shadow: none;
+    }
+
+    @keyframes glitch-top {
+      0%,85%,100% { clip: rect(0,900px,0,0); transform: none; }
+      87%          { clip: rect(0,900px,20px,0); transform: translateX(-4px); }
+      89%          { clip: rect(0,900px,8px,0);  transform: translateX(4px); }
+      91%          { clip: rect(0,900px,0,0); }
+    }
+    @keyframes glitch-bot {
+      0%,85%,100% { clip: rect(0,900px,0,0); transform: none; }
+      88%          { clip: rect(30px,900px,60px,0); transform: translateX(4px); }
+      90%          { clip: rect(22px,900px,45px,0); transform: translateX(-3px); }
+      92%          { clip: rect(0,900px,0,0); }
+    }
+
+    /* ── Nav ── */
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 0.25rem;
+      align-items: center;
+    }
+    nav ul li { position: relative; }
+
+    nav ul li > a {
+      display: block;
+      padding: 0.45rem 0.9rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+    nav ul li > a:hover,
+    nav ul li.dropdown:hover > a {
+      color: var(--accent);
+      border-color: var(--border);
+      background: var(--surface);
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 180px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,229,255,0.06);
+      padding-top: 6px;
+    }
+    .dropdown:hover .dropdown-content { display: block; }
+
+    .dropdown-content a {
+      display: block;
+      padding: 0.6rem 1rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      border-left: 2px solid transparent;
+      transition: color 0.2s, background 0.2s, border-color 0.2s;
+    }
+    .dropdown-content a:hover {
+      color: var(--accent);
+      background: var(--surface);
+      border-left-color: var(--accent);
+    }
+
+    /* ── Main ── */
+    main {
+      flex: 1;
+      padding: 3rem 2rem;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Page title */
+    .page-header {
+      margin-bottom: 2.5rem;
+      animation: fade-up 0.6s ease both;
+    }
+    .prompt-label {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      opacity: 0.8;
+    }
+    .prompt-label::before { content: '> '; }
+
+    .page-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #e8f4ff;
+      letter-spacing: 0.06em;
+    }
+
+    /* Section divider */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0 1.25rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .section-divider span { color: var(--accent); white-space: nowrap; }
+
+    /* ── Game cards ── */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1rem;
+    }
+
+    .app {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s, box-shadow 0.25s;
+      animation: fade-up 0.6s ease both;
+    }
+    .app:hover {
+      border-color: rgba(0,229,255,0.35);
+      box-shadow: 0 0 24px rgba(0,229,255,0.07);
+    }
+
+    /* Subtle glow on hover */
+    .app::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at top left, rgba(0,229,255,0.05) 0%, transparent 65%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .app:hover::before { opacity: 1; }
+
+    /* OS badge line */
+    .app::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .app.xp::after  { background: linear-gradient(90deg, #2a9fd6, transparent); }
+    .app.win7::after { background: linear-gradient(90deg, var(--accent2), transparent); }
+
+    .app img {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      flex-shrink: 0;
+      image-rendering: pixelated;
+    }
+
+    .app-info { flex: 1; min-width: 0; }
+
+    .app-info h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #e8f4ff;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.35rem;
+    }
+
+    .app-info p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.85rem;
+      letter-spacing: 0.04em;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .download-button {
+      display: inline-block;
+      padding: 0.35rem 0.8rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+
+    /* FR = accent cyan, EN = accent green */
+    .download-button.fr {
+      color: var(--accent);
+      border: 1px solid rgba(0,229,255,0.3);
+      background: rgba(0,229,255,0.06);
+    }
+    .download-button.fr:hover {
+      background: rgba(0,229,255,0.15);
+      box-shadow: 0 0 10px rgba(0,229,255,0.2);
+    }
+    .download-button.en {
+      color: var(--accent2);
+      border: 1px solid rgba(0,255,153,0.3);
+      background: rgba(0,255,153,0.06);
+    }
+    .download-button.en:hover {
+      background: rgba(0,255,153,0.15);
+      box-shadow: 0 0 10px rgba(0,255,153,0.2);
+    }
+
+    /* OS tag */
+    .os-tag {
+      display: inline-block;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
+    }
+    .os-tag.xp  { color: #2a9fd6; border: 1px solid rgba(42,159,214,0.3); background: rgba(42,159,214,0.08); }
+    .os-tag.win7 { color: var(--accent2); border: 1px solid rgba(0,255,153,0.3); background: rgba(0,255,153,0.08); }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Stagger cards */
+    .app:nth-child(1)  { animation-delay: 0.05s; }
+    .app:nth-child(2)  { animation-delay: 0.10s; }
+    .app:nth-child(3)  { animation-delay: 0.15s; }
+    .app:nth-child(4)  { animation-delay: 0.20s; }
+    .app:nth-child(5)  { animation-delay: 0.25s; }
+    .app:nth-child(6)  { animation-delay: 0.30s; }
+    .app:nth-child(7)  { animation-delay: 0.35s; }
+    .app:nth-child(8)  { animation-delay: 0.40s; }
+    .app:nth-child(9)  { animation-delay: 0.45s; }
+    .app:nth-child(10) { animation-delay: 0.50s; }
+    .app:nth-child(11) { animation-delay: 0.55s; }
+    .app:nth-child(12) { animation-delay: 0.60s; }
+    .app:nth-child(13) { animation-delay: 0.65s; }
+    .app:nth-child(14) { animation-delay: 0.70s; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 1.25rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+    }
+    footer span { color: var(--accent); }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      header { flex-direction: column; height: auto; padding: 1rem; gap: 0.75rem; }
+      nav ul { flex-wrap: wrap; justify-content: center; }
+      .games-grid { grid-template-columns: 1fr; }
+      main { padding: 2rem 1rem; }
+    }
+  </style>
 </head>
 <body>
-	<header>
-		 <h1>n0f4c3</h1>
-  <nav>
-    <ul>
-      <li><a href="index.html">Accueil</a></li>
-      <li class="dropdown">
-        <a href="#">Mes applications</a>
-        <div class="dropdown-content">
-          <a href="DragonRadio.html">Dragon Radio</a>
-        </div>
-      </li>
-      <li class="dropdown">
-        <a href="#">Astuces</a>
-        <div class="dropdown-content">
-          <a href="anciensjeuxXPwin7.html">Les anciens jeux de XP/win7</a>
-        </div>
-      </li>
-      <li class="dropdown">
-        <a href="#">Bientôt</a>
-        <div class="dropdown-content">
+
+  <div class="grid-bg"></div>
+
+  <header>
+    <h1 data-text="n0f4c3">n0f4c3</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li class="dropdown">
+          <a href="#">Mes applications</a>
+          <div class="dropdown-content">
+            <a href="DragonRadio.html">Dragon Radio</a>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="#">Astuces</a>
+          <div class="dropdown-content">
+            <a href="anciensjeuxXPwin7.html">Les anciens jeux de XP/win7</a>
+          </div>
+        </li>
+        <li class="dropdown">
           <a href="#">Bientôt</a>
+          <div class="dropdown-content">
+            <a href="#">Bientôt</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <div class="prompt-label">archive_games.sh</div>
+      <h2>Les anciens jeux de XP / WIN7</h2>
+    </div>
+
+    <!-- Windows XP -->
+    <div class="section-divider"><span>Windows XP</span></div>
+    <div class="games-grid">
+
+      <div class="app xp">
+        <img src="images/Image redimensionner/Demineur-150x150.png" alt="XP Démineur">
+        <div class="app-info">
+          <h3>Démineur <span class="os-tag xp">XP</span></h3>
+          <p>Le jeu de Démineur de Windows XP</p>
+          <div class="btn-group">
+            <a href="download/XP Games in French/Demineur XP (FR).zip" class="download-button fr">⬇ Français</a>
+            <a href="download/XP Games in English/Minesweeper XP (EN).zip" class="download-button en">⬇ English</a>
+          </div>
         </div>
-      </li>
-    </ul>
-  </nav>
-	</header>
-	<main>
-		<article>
-			<h2>Les anciens jeux de XP/WIN7</h2>
-			<div class="app">
-				<img src="images/Image redimensionner/Demineur-150x150.png" alt="XP Demineur">
-				<div>
-					<h3>XP Demineur</h3>
-					<p>Le jeu de Demineur de XP</p>
-					<a href="download/XP Games in French/Demineur XP (FR).zip" class="download-button">Télécharger Version Française</a>
-					<a href="download/XP Games in English/Minesweeper XP (EN).zip" class="download-button">Download English Version</a>
-				</div>
-			</div>
-			<br>
-			<div class="app">
-				<img src="images/Image redimensionner/Démineur win7-150x150.png" alt="win7 Demineur">
-				<div>
-					<h3>win7 Demineur</h3>
-					<p>Le jeu de Demineur de windows 7</p>
-					<a href="download/win7 Games in French/Demineur win7 (FR).zip" class="download-button">Télécharger Version Française</a>
-					<a href="download/win7 Games in English/Minesweeper win7 (EN).zip" class="download-button">Download English Version</a>
-				</div>
-			</div>
-			<br>
-			<div class="app">
-				<img src="images/Image redimensionner/Freecell-150x150.png" alt="XP Freecell">
-				<div>
-					<h3>XP Freecell</h3>
-					<p>Le Freecell de XP</p>
-					<a href="download/XP Games in French/Freecell XP (FR).zip" class="download-button">Télécharger Version Française</a>
-					<a href="download/XP Games in English/Freecell XP (EN).zip" class="download-button">Download English Version</a>
-				</div>
-			</div>
-			<br>
-			<div class="app">
-				<img src="images/Image redimensionner/FreeCell win7-150x150.png" alt="win7 Freecell">
-				<div>
-					<h3>Freecell (win7)</h3>
-					<p>Le Freecell windows 7</p>
-					<a href="download/win7 Games in French/Freecell win7 (FR).zip" class="download-button">Télécharger Version Française</a>
-					<a href="download/win7 Games in English/Freecell win7 (EN).zip" class="download-button">Download English Version</a>
-				</div>
-			</div>
-			<br>
-			<div class="app">
-				<img src="images/Image redimensionner/La dame de pique-150x150.png" alt="XP La dame de pique">
-				<div>
-					<h3>La dame de pique (XP)</h3>
-					<p>La dame de pique de XP</p>
-					<a href="download/XP Games in French/La dame de pique XP (FR).zip" class="download-button">Télécharger Version Française</a>
-					<a href="download/XP Games in English/Hearts XP (EN).zip" class="download-button">Download English Version</a>
-				</div>
-			</div>
-			<br>
-			<div class="app">
-				<img src="images/Image redimensionner/Dame de pique win7-150x150.png" alt="win7 La dame de pique">
-				<div>
-					<h3>La dame de pique (win7)</h3>
-					<p>La dame de pique de windows 7</p>
-					<a href="download/win7 Games in French/La dame de pique win7 (FR).zip" class="download-button">Télécharger Version Française</a>
-					<a href="download/win7 Games in English/Hearts win7 (EN).zip" class="download-button">Download English Version</a>
-				</div>
-			</div>
-			<br>
-			<div class="app">
-				<img src="images/Image redimensionner/Pinball 3D-150x150.png" alt="XP Pinball 3D">
-				<div>
-					<h3>Pinball 3D (XP)</h3>
-					<p>Le jeu de Pinball 3D de XP</p>
-					<a href="download/XP Games in French/Pinball XP (FR).zip" class="download-button">Télécharger Version Française</a>
-					<a href="download/XP Games in English/Pinball XP (EN).zip" class="download-button">Download English Version</a>
-				</div>
-			</div>
-			<br>
-			<div class="app">
-				<img src="images/Image redimensionner/Solitaire-150x150.png" alt="XP Solitaire">
-				<div>
-					<h3>Solitaire (XP)</h3>
-					<p>Le jeu de Solitaire de XP</p>
-					<a href="download/XP Games in French/Solitaire XP (FR).zip" class="download-button">Télécharger Version Française</a>
-					<a href="download/XP Games in English/Solitaire XP (EN).zip" class="download-button">Download English Version</a>
-				</div>
-			</div>
-			<br>
-			<div class="app">
-				<img src="images/Image redimensionner/Solitaire win7-150x150.png" alt="win7 Solitaire">
-				<div>
-					<h3>Solitaire (win7)</h3>
-					<p>Le jeu de Solitaire de windows 7</p>
-					<a href="download/win7 Games in French/Solitaire win7 (FR).zip" class="download-button">Télécharger Version Française</a>
-					<a href="download/win7 Games in English/Solitaire win7 (EN).zip" class="download-button">Download English Version</a>
-				</div>
-			</div>
-			<br>
-			<div class="app">
-				<img src="images/Image redimensionner/Spider Solitaire-150x150.png" alt="XP Spider Solitaire">
-				<div>
-					<h3>Spider Solitaire (XP)</h3>
-					<p>Le jeu de Spider Solitaire de XP</p>
-					<a href="download/XP Games in French/Spider Solitaire XP (FR).zip" class="download-button">Télécharger Version Française</a>
-					<a href="download/XP Games in English/Spider Solitaire XP (EN).zip" class="download-button">Download English Version</a>
-				</div>
-			</div>
-			<br>
-			<div class="app">
-				<img src="images/Image redimensionner/Spider Solitaire win7-150x150.png" alt="win7 Spider Solitaire">
-				<div>
-					<h3>Spider Solitaire (win7)</h3>
-					<p>Le jeu de Spider Solitaire de windows 7</p>
-					<a href="download/win7 Games in French/SpiderSolitaire win7 (FR).zip" class="download-button">Télécharger Version Française</a>
-					<a href="download/win7 Games in English/SpiderSolitaire win7 (EN).zip" class="download-button">Download English Version</a>
-				</div>
-			</div>
-			<br>
-			<div class="app">
-				<img src="images/Image redimensionner/Chess Titans win7-150x150.png" alt="win7 Chess Titans">
-				<div>
-					<h3>Chess Titans (win7)</h3>
-					<p>Le jeu d'échecs de windows 7</p>
-					<a href="download/win7 Games in French/Chess win7 (FR).zip" class="download-button">Télécharger Version Française</a>
-					<a href="download/win7 Games in English/Chess win7 (EN).zip" class="download-button">Download English Version</a>
-				</div>
-			</div>
-			<br>
-			<div class="app">
-				<img src="images/Image redimensionner/Mahjong Titans win7-150x150.png" alt="win7 Mahjong Titans">
-				<div>
-					<h3>Mahjong Titans (win7)</h3>
-					<p>Le jeu de mahjong de windows 7</p>
-					<a href="download/win7 Games in French/Mahjong win7 (FR).zip" class="download-button">Télécharger Version Française</a>
-					<a href="download/win7 Games in English/Mahjong win7 (EN).zip" class="download-button">Download English Version</a>
-				</div>
-			</div>
-			<br>
-			<div class="app">
-				<img src="images/Image redimensionner/Purble Place win7-150x150.png" alt="win7 Purble Place">
-				<div>
-					<h3>Purble Place (win7)</h3>
-					<p>Le jeu Purble Place de windows 7</p>
-					<a href="download/win7 Games in French/Purble Place win7 (FR).zip" class="download-button">Télécharger Version Française</a>
-					<a href="download/win7 Games in English/Purble Place win7 (EN).zip" class="download-button">Download English Version</a>
-				</div>
-			</div>
-		</article>
-	</main>
-	<footer>
-		<p>site web créer par n0f4c3</p>
-	</footer>
+      </div>
+
+      <div class="app xp">
+        <img src="images/Image redimensionner/Freecell-150x150.png" alt="XP Freecell">
+        <div class="app-info">
+          <h3>Freecell <span class="os-tag xp">XP</span></h3>
+          <p>Le Freecell de Windows XP</p>
+          <div class="btn-group">
+            <a href="download/XP Games in French/Freecell XP (FR).zip" class="download-button fr">⬇ Français</a>
+            <a href="download/XP Games in English/Freecell XP (EN).zip" class="download-button en">⬇ English</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app xp">
+        <img src="images/Image redimensionner/La dame de pique-150x150.png" alt="XP La dame de pique">
+        <div class="app-info">
+          <h3>La dame de pique <span class="os-tag xp">XP</span></h3>
+          <p>La dame de pique de Windows XP</p>
+          <div class="btn-group">
+            <a href="download/XP Games in French/La dame de pique XP (FR).zip" class="download-button fr">⬇ Français</a>
+            <a href="download/XP Games in English/Hearts XP (EN).zip" class="download-button en">⬇ English</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app xp">
+        <img src="images/Image redimensionner/Pinball 3D-150x150.png" alt="XP Pinball 3D">
+        <div class="app-info">
+          <h3>Pinball 3D <span class="os-tag xp">XP</span></h3>
+          <p>Le jeu de Pinball 3D de Windows XP</p>
+          <div class="btn-group">
+            <a href="download/XP Games in French/Pinball XP (FR).zip" class="download-button fr">⬇ Français</a>
+            <a href="download/XP Games in English/Pinball XP (EN).zip" class="download-button en">⬇ English</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app xp">
+        <img src="images/Image redimensionner/Solitaire-150x150.png" alt="XP Solitaire">
+        <div class="app-info">
+          <h3>Solitaire <span class="os-tag xp">XP</span></h3>
+          <p>Le jeu de Solitaire de Windows XP</p>
+          <div class="btn-group">
+            <a href="download/XP Games in French/Solitaire XP (FR).zip" class="download-button fr">⬇ Français</a>
+            <a href="download/XP Games in English/Solitaire XP (EN).zip" class="download-button en">⬇ English</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app xp">
+        <img src="images/Image redimensionner/Spider Solitaire-150x150.png" alt="XP Spider Solitaire">
+        <div class="app-info">
+          <h3>Spider Solitaire <span class="os-tag xp">XP</span></h3>
+          <p>Le jeu de Spider Solitaire de Windows XP</p>
+          <div class="btn-group">
+            <a href="download/XP Games in French/Spider Solitaire XP (FR).zip" class="download-button fr">⬇ Français</a>
+            <a href="download/XP Games in English/Spider Solitaire XP (EN).zip" class="download-button en">⬇ English</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Windows 7 -->
+    <div class="section-divider"><span>Windows 7</span></div>
+    <div class="games-grid">
+
+      <div class="app win7">
+        <img src="images/Image redimensionner/Démineur win7-150x150.png" alt="win7 Démineur">
+        <div class="app-info">
+          <h3>Démineur <span class="os-tag win7">Win7</span></h3>
+          <p>Le jeu de Démineur de Windows 7</p>
+          <div class="btn-group">
+            <a href="download/win7 Games in French/Demineur win7 (FR).zip" class="download-button fr">⬇ Français</a>
+            <a href="download/win7 Games in English/Minesweeper win7 (EN).zip" class="download-button en">⬇ English</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app win7">
+        <img src="images/Image redimensionner/FreeCell win7-150x150.png" alt="win7 Freecell">
+        <div class="app-info">
+          <h3>Freecell <span class="os-tag win7">Win7</span></h3>
+          <p>Le Freecell de Windows 7</p>
+          <div class="btn-group">
+            <a href="download/win7 Games in French/Freecell win7 (FR).zip" class="download-button fr">⬇ Français</a>
+            <a href="download/win7 Games in English/Freecell win7 (EN).zip" class="download-button en">⬇ English</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app win7">
+        <img src="images/Image redimensionner/Dame de pique win7-150x150.png" alt="win7 La dame de pique">
+        <div class="app-info">
+          <h3>La dame de pique <span class="os-tag win7">Win7</span></h3>
+          <p>La dame de pique de Windows 7</p>
+          <div class="btn-group">
+            <a href="download/win7 Games in French/La dame de pique win7 (FR).zip" class="download-button fr">⬇ Français</a>
+            <a href="download/win7 Games in English/Hearts win7 (EN).zip" class="download-button en">⬇ English</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app win7">
+        <img src="images/Image redimensionner/Solitaire win7-150x150.png" alt="win7 Solitaire">
+        <div class="app-info">
+          <h3>Solitaire <span class="os-tag win7">Win7</span></h3>
+          <p>Le jeu de Solitaire de Windows 7</p>
+          <div class="btn-group">
+            <a href="download/win7 Games in French/Solitaire win7 (FR).zip" class="download-button fr">⬇ Français</a>
+            <a href="download/win7 Games in English/Solitaire win7 (EN).zip" class="download-button en">⬇ English</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app win7">
+        <img src="images/Image redimensionner/Spider Solitaire win7-150x150.png" alt="win7 Spider Solitaire">
+        <div class="app-info">
+          <h3>Spider Solitaire <span class="os-tag win7">Win7</span></h3>
+          <p>Le jeu de Spider Solitaire de Windows 7</p>
+          <div class="btn-group">
+            <a href="download/win7 Games in French/SpiderSolitaire win7 (FR).zip" class="download-button fr">⬇ Français</a>
+            <a href="download/win7 Games in English/SpiderSolitaire win7 (EN).zip" class="download-button en">⬇ English</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app win7">
+        <img src="images/Image redimensionner/Chess Titans win7-150x150.png" alt="win7 Chess Titans">
+        <div class="app-info">
+          <h3>Chess Titans <span class="os-tag win7">Win7</span></h3>
+          <p>Le jeu d'échecs de Windows 7</p>
+          <div class="btn-group">
+            <a href="download/win7 Games in French/Chess win7 (FR).zip" class="download-button fr">⬇ Français</a>
+            <a href="download/win7 Games in English/Chess win7 (EN).zip" class="download-button en">⬇ English</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app win7">
+        <img src="images/Image redimensionner/Mahjong Titans win7-150x150.png" alt="win7 Mahjong Titans">
+        <div class="app-info">
+          <h3>Mahjong Titans <span class="os-tag win7">Win7</span></h3>
+          <p>Le jeu de Mahjong de Windows 7</p>
+          <div class="btn-group">
+            <a href="download/win7 Games in French/Mahjong win7 (FR).zip" class="download-button fr">⬇ Français</a>
+            <a href="download/win7 Games in English/Mahjong win7 (EN).zip" class="download-button en">⬇ English</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app win7">
+        <img src="images/Image redimensionner/Purble Place win7-150x150.png" alt="win7 Purble Place">
+        <div class="app-info">
+          <h3>Purble Place <span class="os-tag win7">Win7</span></h3>
+          <p>Le jeu Purble Place de Windows 7</p>
+          <div class="btn-group">
+            <a href="download/win7 Games in French/Purble Place win7 (FR).zip" class="download-button fr">⬇ Français</a>
+            <a href="download/win7 Games in English/Purble Place win7 (EN).zip" class="download-button en">⬇ English</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    site web créé par <span>n0f4c3</span>
+  </footer>
+
 </body>
 </html>

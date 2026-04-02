@@ -1,56 +1,381 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-	<title>n0f4c3</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<script src="js\scrollToBottom.js"></script>
+  <title>n0f4c3</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="js/scrollToBottom.js"></script>
+  <style>
+    /* ── Variables ── */
+    :root {
+      --bg:        #080b0f;
+      --bg2:       #0d1117;
+      --surface:   #111720;
+      --border:    #1e2d42;
+      --accent:    #00e5ff;
+      --accent2:   #00ff99;
+      --text:      #c9d8ea;
+      --muted:     #4a6278;
+      --danger:    #ff3c5f;
+      --font-mono: 'Courier New', Courier, monospace;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ── Scanlines overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,229,255,0.015) 2px,
+        rgba(0,229,255,0.015) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── Header ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8, 11, 15, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      height: 64px;
+    }
+
+    /* Logo / h1 */
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      text-shadow: 0 0 18px rgba(0,229,255,0.55);
+      cursor: default;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    /* Glitch effect */
+    header h1::before,
+    header h1::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      overflow: hidden;
+      clip: rect(0, 900px, 0, 0);
+    }
+    header h1::before {
+      color: var(--danger);
+      animation: glitch-top 3.5s infinite steps(1);
+      text-shadow: none;
+    }
+    header h1::after {
+      color: var(--accent2);
+      animation: glitch-bot 3.5s infinite steps(1);
+      text-shadow: none;
+    }
+
+    @keyframes glitch-top {
+      0%,85%,100% { clip: rect(0,900px,0,0); transform: none; }
+      87%          { clip: rect(0,900px,20px,0); transform: translateX(-4px); }
+      89%          { clip: rect(0,900px,8px,0);  transform: translateX(4px); }
+      91%          { clip: rect(0,900px,0,0); }
+    }
+    @keyframes glitch-bot {
+      0%,85%,100% { clip: rect(0,900px,0,0); transform: none; }
+      88%          { clip: rect(30px,900px,60px,0); transform: translateX(4px); }
+      90%          { clip: rect(22px,900px,45px,0); transform: translateX(-3px); }
+      92%          { clip: rect(0,900px,0,0); }
+    }
+
+    /* ── Nav ── */
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 0.25rem;
+      align-items: center;
+    }
+
+    nav ul li { position: relative; }
+
+    nav ul li > a {
+      display: block;
+      padding: 0.45rem 0.9rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+    nav ul li > a:hover,
+    nav ul li.dropdown:hover > a {
+      color: var(--accent);
+      border-color: var(--border);
+      background: var(--surface);
+    }
+
+    /* Dropdown */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 180px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,229,255,0.06);
+      padding-top: 6px;
+    }
+    .dropdown:hover .dropdown-content { display: block; }
+
+    .dropdown-content a {
+      display: block;
+      padding: 0.6rem 1rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      border-left: 2px solid transparent;
+      transition: color 0.2s, background 0.2s, border-color 0.2s;
+    }
+    .dropdown-content a:hover {
+      color: var(--accent);
+      background: var(--surface);
+      border-left-color: var(--accent);
+    }
+
+    /* ── Main ── */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+    }
+
+    /* Hero card */
+    article {
+      position: relative;
+      max-width: 680px;
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 3rem 3.5rem;
+      animation: fade-up 0.8s ease both;
+      overflow: hidden;
+    }
+
+    article::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at top left, rgba(0,229,255,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Corner accent lines */
+    article::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 60px; height: 60px;
+      border-top: 2px solid var(--accent);
+      border-left: 2px solid var(--accent);
+      border-radius: 12px 0 0 0;
+      pointer-events: none;
+    }
+
+    .corner-br {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 60px; height: 60px;
+      border-bottom: 2px solid var(--accent2);
+      border-right: 2px solid var(--accent2);
+      border-radius: 0 0 12px 0;
+      pointer-events: none;
+    }
+
+    /* Prompt label */
+    .prompt-label {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      opacity: 0.8;
+    }
+    .prompt-label::before { content: '> '; }
+
+    article h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #e8f4ff;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.25rem;
+      line-height: 1.2;
+    }
+
+    article p {
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+    article p:last-of-type { margin-bottom: 0; }
+
+    /* Typewriter cursor on last p */
+    article p:last-of-type::after {
+      content: '▌';
+      color: var(--accent);
+      animation: blink 1s step-end infinite;
+      margin-left: 2px;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* Status badge */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent2);
+      box-shadow: 0 0 8px var(--accent2);
+      animation: pulse 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Background grid ── */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 1.25rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+    }
+    footer span { color: var(--accent); }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      header { flex-direction: column; height: auto; padding: 1rem; gap: 0.75rem; }
+      nav ul { flex-wrap: wrap; justify-content: center; }
+      article { padding: 2rem 1.5rem; }
+      article h2 { font-size: 1.2rem; }
+    }
+  </style>
 </head>
 <body>
-	<header>
-  <h1>n0f4c3</h1>
-  <nav>
-    <ul>
-      <li><a href="index.html">Accueil</a></li>
-      <li class="dropdown">
-        <a href="#">Mes applications</a>
-        <div class="dropdown-content">
-          <a href="DragonRadio.html">Dragon Radio</a>
-        </div>
-      </li>
-      <li class="dropdown">
-        <a href="#">Astuces</a>
-        <div class="dropdown-content">
-          <a href="anciensjeuxXPwin7.html">Les anciens jeux de XP/win7</a>
-        </div>
-      </li>
-      <li class="dropdown">
-        <a href="#">Bientôt</a>
-        <div class="dropdown-content">
+
+  <div class="grid-bg"></div>
+
+  <header>
+    <h1 data-text="n0f4c3">n0f4c3</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+
+        <li class="dropdown">
+          <a href="#">Mes applications</a>
+          <div class="dropdown-content">
+            <a href="DragonRadio.html">Dragon Radio</a>
+          </div>
+        </li>
+
+        <li class="dropdown">
+          <a href="#">Astuces</a>
+          <div class="dropdown-content">
+            <a href="anciensjeuxXPwin7.html">Les anciens jeux de XP/win7</a>
+          </div>
+        </li>
+
+        <li class="dropdown">
           <a href="#">Bientôt</a>
-        </div>
-      </li>
-    </ul>
-  </nav>
-</header>
+          <div class="dropdown-content">
+            <a href="#">Bientôt</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </header>
 
+  <main>
+    <article>
+      <div class="corner-br"></div>
+      <span class="prompt-label">init_welcome.sh</span>
+      <h2>À propos du site</h2>
+      <p>Bonjour et bienvenue sur mon site.</p>
+      <p>Ici vous trouverez des applications créées par moi, n0f4c3, et bien plus encore.</p>
+      <div class="status-bar">
+        <span class="dot"></span>
+        <span>SYSTÈME EN LIGNE &nbsp;|&nbsp; n0f4c3 © 2024</span>
+      </div>
+    </article>
+  </main>
 
+  <footer>
+    site web créé par <span>n0f4c3</span>
+  </footer>
 
-	<main>
-		<article>
-			<h2>À propos du site</h2>
-			<p>Bonjour et bienvenue sur mon site</p>
-			<p>ici vous trouverez des application créer par moi n0f4c3 et plus encore</p>
-		</article>
-	</main>
-
-	<footer>
-		<p>site web créer par n0f4c3</p>
-	</footer>
 </body>
 </html>
-
-
-
-
