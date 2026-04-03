@@ -162,8 +162,10 @@
       overflow: hidden;
       box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,229,255,0.06);
       padding-top: 6px;
+      z-index: 200;
     }
     .dropdown:hover .dropdown-content { display: block; }
+    .dropdown.open .dropdown-content  { display: block; }
 
     .dropdown-content a {
       display: block;
@@ -625,5 +627,24 @@
     site web créé par <span>n0f4c3</span>
   </footer>
 
+  <script>
+    /* ── Mobile dropdown (touch) ── */
+    var dropdowns = document.querySelectorAll('.dropdown');
+    dropdowns.forEach(function(dd) {
+      dd.querySelector('a').addEventListener('click', function(e) {
+        if (window.matchMedia('(hover: none)').matches) {
+          e.preventDefault();
+          var isOpen = dd.classList.contains('open');
+          dropdowns.forEach(function(d) { d.classList.remove('open'); });
+          if (!isOpen) { dd.classList.add('open'); }
+        }
+      });
+    });
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.dropdown')) {
+        dropdowns.forEach(function(d) { d.classList.remove('open'); });
+      }
+    });
+  </script>
 </body>
 </html>
